@@ -50,8 +50,9 @@ export const loginUser = async (req, res) => {
     process.env.jwt_secret
   );
   res.cookie("token", jwtToken, {
-    sameSite: "none", // or "none" if using HTTPS + cross-origin
+    httpOnly: true,
     secure: true,
+    sameSite: "none",
   });
 
   return res
@@ -68,8 +69,9 @@ export const totalUsers = async (req, res) => {
 export const signOut = async (req, res) => {
   console.log("hello");
   res.clearCookie("token", {
-    sameSite: "none",
+    httpOnly: true,
     secure: true,
+    sameSite: "none",
   });
 
   return res.status(200).json({ msg: "User logged out" });
