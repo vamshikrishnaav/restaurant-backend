@@ -9,6 +9,7 @@ import orderRouter from "./routes/orderRoutes.js";
 
 const app = express();
 dotenv.config();
+console.log(process.env.FRONTEND_WEB_URL);
 app.use(
   cors({
     origin: [process.env.FRONTEND_WEB_URL, process.env.FRONTEND_MOBILE_URL],
