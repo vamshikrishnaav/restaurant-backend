@@ -56,6 +56,8 @@ export const loginUser = async (req, res) => {
     path: "/",
   });
 
+  localStorage.setItem("token", jwtToken);
+
   return res
     .status(200)
     .json({ msg: "User logged in", token: jwtToken, success: true });
