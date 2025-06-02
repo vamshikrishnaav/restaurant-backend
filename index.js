@@ -9,6 +9,10 @@ import orderRouter from "./routes/orderRoutes.js";
 
 const app = express();
 dotenv.config();
+app.use(cookieParser());
+app.use(express.json());
+
+dbConnect();
 console.log(process.env.FRONTEND_WEB_URL);
 app.use(
   cors({

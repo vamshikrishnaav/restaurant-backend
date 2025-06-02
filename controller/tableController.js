@@ -15,6 +15,8 @@ export const createTable = async (req, res) => {
 
     const { seats, tableNumber } = req.body;
 
+    console.log(seats, tableNumber);
+
     if (!seats || !tableNumber) {
       return res.status(400).json({ msg: "Seats fiels is required!" });
     }
@@ -28,7 +30,9 @@ export const createTable = async (req, res) => {
       return res.status(400).json({ msg: "Table not created!" });
     }
 
-    return res.status(201).json({ msg: "table created successfully" });
+    return res
+      .status(201)
+      .json({ msg: "table created successfully", table: table });
   } catch (error) {
     console.log(error);
   }
@@ -59,16 +63,22 @@ export const bookTable = async (req, res) => {
     return res.status(400).json({ msg: "Table is booked", success: false });
   }
 
-  await Table.findByIdAndUpdate(table._id, {
-    availabilityStatus: "booked",
-    user: user._id,
-    bookedDate: new Date(),
-  });
+  const tableData = await Table.findByIdAndUpdate(
+    table._id,
+    {
+      availabilityStatus: "booked",
+      user: user._id,
+      bookedDate: new Date(),
+    },
+    { new: true }
+  );
   await User.findByIdAndUpdate(user._id, {
     tableId: table._id,
   });
 
-  return res.status(201).json({ msg: "Table booked successfully" });
+  return res
+    .status(201)
+    .json({ msg: "Table booked successfully", table: tableData });
 };
 
 export const updateTableinfo = async (req, res) => {
@@ -97,6 +107,7 @@ export const updateTableinfo = async (req, res) => {
 export const deleteTable = async (req, res) => {
   const { tableNumber } = req.body;
   const table = await Table.findOne({ tableNumber });
+  console.log(req.body);
   if (!table) {
     return res.status(400).json({ msg: "table doesnot exsist" });
   }
@@ -118,7 +129,8 @@ export const getTotalTable = async (req, res) => {
   table.map((item) => {
     tableSummary.push({
       tableNumber: item.tableNumber,
-      tableStatus: item.availabilityStatus,
+      availabilityStatus: item.availabilityStatus,
+      seats: item.seats,
     });
   });
 

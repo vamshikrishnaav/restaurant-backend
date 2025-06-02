@@ -1,4 +1,5 @@
 import Order from "../model/order.js";
+import Table from "../model/table.js";
 import moment from "moment";
 
 export const createOrder = async (req, res) => {
@@ -6,6 +7,14 @@ export const createOrder = async (req, res) => {
 
   if (!tableNumber || !orderItem) {
     return res.status(400).json({ msg: "required fields" });
+  }
+
+  const table = await Table.find();
+
+  if (table.length < tableNumber) {
+    return res
+      .status(400)
+      .json({ msg: "table doesnot exists", success: false });
   }
 
   orderType === undefined ? "dineIn" : orderType;
