@@ -40,3 +40,19 @@ export const userAuthentication = async (req, res, next) => {
   }
   next();
 };
+
+export const validate = async (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (!token) return res.status(404).json({ msg: "unauthorized" });
+  console.log(token);
+  try {
+    const decode = jwt.decode(token, process.env.jwt_secret);
+    req.user = decode;
+
+    console.log(req.user);
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+};
